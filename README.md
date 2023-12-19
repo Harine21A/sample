@@ -1,7 +1,9 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is an ecom app built using nextjs, MUI and mongoDB.
 
 ## Getting Started
-
+first clone the repo and use:
+npm i 
+to install the packages
 First, run the development server:
 
 ```bash
