@@ -12,12 +12,13 @@ import {
   ThemeProvider,
   createTheme,
   CssBaseline,
+  Badge,
   Switch,
 } from '@mui/material';
 
 export default function Layout({ title, description, children }) {
   const { state, dispatch } = useContext(Store);
-  const { darkMode } = state;
+  const { darkMode,cart } = state;
   const darkModeChangeHandler = () => {
     dispatch({ type: darkMode ? 'DARK_MODE_OFF' : 'DARK_MODE_ON' });
     const newDarkMode = !darkMode;
@@ -75,7 +76,13 @@ export default function Layout({ title, description, children }) {
                 onChange={darkModeChangeHandler}
               ></Switch>
               <NextLink href="/cart" passHref>
-                {/* <Link> */}Cart{/* </Link> */}
+              {cart.cartItems.length > 0 ? (
+                    <Badge color="secondary" badgeContent={cart.cartItems.length}>
+                      Cart
+                    </Badge>
+                  ) : (
+                    'Cart'
+                  )}
               </NextLink>
               <NextLink href="/login" passHref>
                 {/* <Link> */}Login{/* </Link> */}

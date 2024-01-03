@@ -1,6 +1,9 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import NextLink from 'next/link';
 import Image from 'next/image';
+import axios from 'axios';
+import { Store } from '../../utils/Store';
+import { useRouter } from 'next/router';
 import { Grid,
     Link,
     List,
@@ -26,10 +29,23 @@ const theme = createTheme({
   });
 
 export default function ProductScreen(props) {
-  const {product} = props;
+  const {product} = props; 
+  const router = useRouter();
+  const { state,dispatch } = useContext(Store);
   if (!product) {
     return <div>Product Not Found</div>;
   }
+  const addToCartHandler = async () => {
+    const existItem = state.cart.cartItems.find((x) => x._id === product._id);
+    const quantity = existItem ? existItem.quantity + 1 : 1;
+    const { data } = await axios.get(`/api/products/${product._id}`);
+    if (data.countInStock < quantity) {
+      window.alert('Sorry. Product is out of stock');
+      return;
+    }
+    dispatch({ type: 'CART_ADD_ITEM', payload: { ...product, quantity } });
+    router.push('/cart');
+  };
   return (
     <Layout title={product.name} description={product.description}>
         <div style={{marginBottom: 10,marginTop: 10}}>
@@ -95,7 +111,12 @@ export default function ProductScreen(props) {
               </ListItem>
               <ListItem>
               <ThemeProvider theme={theme}>
-                <Button fullWidth variant="contained" color="ochre">
+              <Button
+                  fullWidth
+                  variant="contained"
+                  color="ochre"
+                  onClick={addToCartHandler}
+                >
                   Add to cart
                 </Button>
                 </ThemeProvider>
